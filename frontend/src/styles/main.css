@@ -1,0 +1,121 @@
+:root {
+  --bg: #071029;
+  --panel: #10213f;
+  --accent: #39a2db;
+  --accent-2: #9ddfd3;
+  --text: #ecf3ff;
+  --water: #1d4e89;
+  --ship: #9aa8bf;
+  --hit: #e63946;
+  --miss: #b8d0eb;
+  --invalid: #ff9f1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, Arial, sans-serif;
+  background: radial-gradient(circle at top, #163160, var(--bg));
+  color: var(--text);
+}
+
+.app {
+  width: min(1200px, 95vw);
+  margin: 2rem auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  background: color-mix(in srgb, var(--panel), transparent 5%);
+  border: 1px solid #24436f;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.hero h1 {
+  margin: 0;
+}
+
+.hero p,
+.log {
+  margin: 0.35rem 0 0;
+  color: var(--accent-2);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+}
+
+.controls label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+}
+
+.controls input,
+.controls select,
+button {
+  border-radius: 10px;
+  border: 1px solid #2d5b90;
+  background: #193967;
+  color: var(--text);
+  padding: 0.7rem 0.8rem;
+  font-size: 0.95rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.6rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+.boards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.board-card {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #24436f;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(24px, 1fr));
+  gap: 4px;
+}
+
+.cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 5px;
+  border: 1px solid #81a4cc66;
+  background: var(--water);
+}
+
+.cell.ship { background: var(--ship); }
+.cell.hit { background: var(--hit); }
+.cell.miss { background: var(--miss); }
+.cell.enemy { cursor: crosshair; }
+.cell.preview { outline: 2px dashed var(--accent-2); }
+.cell.preview-invalid { outline: 2px dashed var(--invalid); }
+
+@media (max-width: 700px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

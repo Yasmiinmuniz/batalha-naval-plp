@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Batalha Naval | PLP</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero panel">
+        <h1>Batalha Naval</h1>
+        <p>Posicione sua frota e enfrente a IA em uma campanha rápida.</p>
+      </header>
+
+      <section class="panel controls">
+        <div>
+          <label for="playerName">Seu nome</label>
+          <input id="playerName" type="text" placeholder="Capitão(a)" maxlength="20" />
+        </div>
+
+        <div>
+          <label for="difficulty">Dificuldade</label>
+          <select id="difficulty">
+            <option value="easy">Fácil</option>
+            <option value="medium">Médio</option>
+            <option value="hard">Difícil</option>
+          </select>
+        </div>
+
+        <div class="buttons">
+          <button id="rotateBtn" type="button">Rotacionar navio (Horizontal)</button>
+          <button id="newGameBtn" type="button">Novo jogo</button>
+        </div>
+      </section>
+
+      <section class="panel status">
+        <p id="statusText">Posicione seus navios para começar.</p>
+        <p id="shipsText"></p>
+        <p id="logText" class="log"></p>
+      </section>
+
+      <section class="boards">
+        <article class="board-card">
+          <h2 id="playerBoardTitle">Seu tabuleiro</h2>
+          <div id="playerBoard" class="board" aria-label="Tabuleiro do jogador"></div>
+        </article>
+
+        <article class="board-card">
+          <h2>Tabuleiro inimigo</h2>
+          <div id="enemyBoard" class="board" aria-label="Tabuleiro inimigo"></div>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="./scripts/app.js"></script>
+  </body>
+</html>
