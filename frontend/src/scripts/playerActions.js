@@ -1,67 +1,120 @@
-import { SHIP_SIZES, allShipsDestroyed, placeShip } from './state.js';
-import { getAiTarget, registerHitNeighbors } from './campaignView.js';
+import { attack, createGame, getGame, getRanking, move } from './api.js';
+import { applyGameSnapshot, getState, setState, resetSetupState } from './state.js';
+import { mapDifficultyToApi } from './campaignView.js';
 
-function formatCoord(row, col) {
-  return `(${row + 1}, ${col + 1})`;
+function withLoading(asyncAction) {
+  return async (...args) => {
+    setState({ loading: true, error: '' });
+    try {
+      await asyncAction(...args);
+    } catch (error) {
+      setState({ error: error.message || 'Erro inesperado.' });
+    } finally {
+      setState({ loading: false });
+    }
+  };
 }
 
-export function handlePlayerPlacement(state, row, col, refs) {
-  const size = SHIP_SIZES[state.currentShipIndex];
-  if (!size) return;
+function applyLegacyTurnResult(response, row, col) {
+  const state = getState();
+  const boards = {
+    player: state.boards.player.map((r) => r.map((c) => ({ ...c }))),
+    enemy: state.boards.enemy.map((r) => r.map((c) => ({ ...c }))),
+  };
 
-  const success = placeShip(state.playerBoard, size, row, col, state.orientation);
-  if (!success) {
-    refs.statusText.textContent = 'Posição inválida para este navio.';
+  if (response.player) {
+    const mark = String(response.player.status || '').toUpperCase() === 'HIT' ? 'HIT' : 'MISS';
+    boards.enemy[row][col].mark = mark;
+  }
+
+  if (response.ai) {
+    const mark = String(response.ai.status || '').toUpperCase() === 'HIT' ? 'HIT' : 'MISS';
+    boards.player[response.ai.row][response.ai.col].mark = mark;
+  }
+
+  setState({
+    boards,
+    status: response.gameOver ? (String(response.winner || '').toUpperCase() === 'PLAYER' ? 'PLAYER_WIN' : 'AI_WIN') : state.status,
+    turn: 'PLAYER',
+  });
+}
+
+export const startNewGame = withLoading(async ({ playerName, difficulty, mode }) => {
+  resetSetupState();
+
+  const created = await createGame({
+    playerName,
+    difficulty: mapDifficultyToApi(difficulty),
+    mode,
+  });
+
+  const gameId = created.id || created.gameId;
+  const state = getState();
+  const freshPlayer = state.boards.player.map((r) => r.map(() => ({ mark: 'UNKNOWN', hasShip: false })));
+  const freshEnemy = state.boards.enemy.map((r) => r.map(() => ({ mark: 'UNKNOWN', hasShip: false })));
+
+  setState({
+    gameId,
+    mode,
+    difficulty,
+    status: 'IN_PROGRESS',
+    turn: 'PLAYER',
+    boards: { player: freshPlayer, enemy: freshEnemy },
+  });
+
+  if (created.game || created.boards || created.playerBoard) {
+    applyGameSnapshot(created);
     return;
   }
 
-  state.currentShipIndex += 1;
-
-  if (state.currentShipIndex >= SHIP_SIZES.length) {
-    state.phase = 'battle';
-    refs.statusText.textContent = 'Batalha iniciada! Ataque o tabuleiro inimigo.';
-    state.battleLog = 'A IA está aguardando seu primeiro disparo.';
+  try {
+    const snapshot = await getGame(gameId);
+    applyGameSnapshot(snapshot);
+  } catch (_error) {
   }
-}
+});
 
-export function playerAttack(state, row, col, refs) {
-  if (state.phase !== 'battle' || state.gameOver) return;
+export const attackCell = withLoading(async (row, col) => {
+  const state = getState();
+  if (!state.gameId || state.turn !== 'PLAYER' || state.status !== 'IN_PROGRESS' || state.setup.phase !== 'done') return;
 
-  const enemyCell = state.enemyBoard[row][col];
-  if (enemyCell.wasShot) return;
-
-  enemyCell.wasShot = true;
-  const playerResult = enemyCell.hasShip ? 'acerto' : 'água';
-
-  if (allShipsDestroyed(state.enemyBoard)) {
-    state.gameOver = true;
-    refs.statusText.textContent = `${state.playerName} venceu! 🚢`;
-    state.battleLog = `Seu disparo em ${formatCoord(row, col)} foi ${playerResult}. Fim de jogo.`;
+  const response = await attack(state.gameId, row, col);
+  if (response.game || response.boards || response.playerBoard) {
+    applyGameSnapshot(response);
     return;
   }
 
-  const aiResult = aiTurn(state);
-  refs.statusText.textContent = `Você: ${playerResult} em ${formatCoord(row, col)}.`;
-  state.battleLog = aiResult;
-}
+  try {
+    const snapshot = await getGame(state.gameId);
+    applyGameSnapshot(snapshot);
+  } catch (_error) {
+    applyLegacyTurnResult(response, row, col);
+  }
+});
 
-export function aiTurn(state) {
-  if (state.gameOver) return '';
+export const moveShip = withLoading(async (fromRow, fromCol, toRow, toCol) => {
+  const state = getState();
+  if (!state.gameId || state.mode !== 'dynamic' || state.turn !== 'PLAYER' || state.status !== 'IN_PROGRESS') return;
 
-  const target = getAiTarget(state);
-  const cell = state.playerBoard[target.row][target.col];
-  cell.wasShot = true;
-
-  let result = 'água';
-  if (cell.hasShip) {
-    result = 'acerto';
-    registerHitNeighbors(state.enemyTargets, target.row, target.col);
+  const response = await move(state.gameId, fromRow, fromCol, toRow, toCol);
+  if (response.game || response.boards || response.playerBoard) {
+    applyGameSnapshot(response);
+    return;
   }
 
-  if (allShipsDestroyed(state.playerBoard)) {
-    state.gameOver = true;
-    return `IA: ${result} em ${formatCoord(target.row, target.col)}. A IA venceu esta campanha.`;
+  try {
+    const snapshot = await getGame(state.gameId);
+    applyGameSnapshot(snapshot);
+  } catch (_error) {
+    setState({ error: 'Endpoint /game/:id/move não disponível no backend atual.' });
   }
+});
 
-  return `IA: ${result} em ${formatCoord(target.row, target.col)}.`;
-}
+export const refreshRanking = withLoading(async () => {
+  try {
+    const ranking = await getRanking();
+    setState({ ranking: Array.isArray(ranking) ? ranking : ranking.ranking || [] });
+  } catch (_error) {
+    setState({ ranking: [] });
+  }
+});

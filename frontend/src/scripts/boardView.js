@@ -1,72 +1,88 @@
-import { BOARD_SIZE, SHIP_SIZES, canPlaceShip, getShipCells } from './state.js';
+import { BOARD_SIZE, MEDAL_CATALOG } from './state.js';
+import { renderRanking } from './rankingView.js';
+import { modeLabel } from './campaignView.js';
 
-function cellClass(...tokens) {
-  return ['cell', ...tokens].filter(Boolean).join(' ');
+function cellCss(cell, owner) {
+  const classes = ['cell'];
+
+  if (owner === 'player' && cell.hasShip) classes.push('ship');
+  if (cell.mark === 'HIT') classes.push('hit');
+  if (cell.mark === 'MISS') classes.push('miss');
+  if (cell.mark === 'SUNK') classes.push('sunk');
+
+  return classes.join(' ');
 }
 
-export function renderBoards(state, refs, handlers) {
-  refs.playerBoard.innerHTML = '';
-  refs.enemyBoard.innerHTML = '';
+function drawBoard(container, board, owner, onCellClick, clickEnabled) {
+  container.innerHTML = '';
 
   for (let row = 0; row < BOARD_SIZE; row += 1) {
     for (let col = 0; col < BOARD_SIZE; col += 1) {
-      const pCell = state.playerBoard[row][col];
-      const playerCell = document.createElement('button');
-      playerCell.type = 'button';
-      playerCell.className = cellClass(
-        pCell.hasShip && 'ship',
-        pCell.wasShot && (pCell.hasShip ? 'hit' : 'miss'),
-      );
-      playerCell.dataset.row = String(row);
-      playerCell.dataset.col = String(col);
-      playerCell.addEventListener('click', handlers.onPlayerCellClick);
+      const cell = board[row][col];
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = cellCss(cell, owner);
+      button.dataset.row = String(row);
+      button.dataset.col = String(col);
+      button.disabled = !clickEnabled;
 
-      if (state.phase === 'setup') {
-        playerCell.addEventListener('mouseenter', handlers.onPlayerHover);
-        playerCell.addEventListener('mouseleave', () => handlers.onPlayerHover(null));
+      if (clickEnabled) {
+        button.addEventListener('click', () => onCellClick(row, col));
       }
 
-      refs.playerBoard.append(playerCell);
-
-      const eCell = state.enemyBoard[row][col];
-      const enemyCell = document.createElement('button');
-      enemyCell.type = 'button';
-      enemyCell.className = cellClass('enemy', eCell.wasShot && (eCell.hasShip ? 'hit' : 'miss'));
-      enemyCell.disabled = state.phase !== 'battle' || eCell.wasShot || state.gameOver;
-      enemyCell.dataset.row = String(row);
-      enemyCell.dataset.col = String(col);
-      enemyCell.addEventListener('click', handlers.onEnemyCellClick);
-      refs.enemyBoard.append(enemyCell);
+      container.append(button);
     }
-  }
-
-  if (state.phase === 'setup' && Number.isInteger(state.hoverRow) && Number.isInteger(state.hoverCol)) {
-    const size = SHIP_SIZES[state.currentShipIndex];
-    if (!size) return;
-
-    const valid = canPlaceShip(state.playerBoard, size, state.hoverRow, state.hoverCol, state.orientation);
-    getShipCells(size, state.hoverRow, state.hoverCol, state.orientation).forEach(({ row, col }) => {
-      if (row < 0 || col < 0 || row >= BOARD_SIZE || col >= BOARD_SIZE) return;
-      const idx = row * BOARD_SIZE + col;
-      const el = refs.playerBoard.children[idx];
-      if (el) el.classList.add(valid ? 'preview' : 'preview-invalid');
-    });
   }
 }
 
-export function renderStatus(state, refs) {
-  if (!state.gameOver && state.phase === 'setup') {
-    const remaining = SHIP_SIZES.slice(state.currentShipIndex);
-    const currentShip = SHIP_SIZES[state.currentShipIndex];
-    refs.statusText.textContent = currentShip
-      ? `Posicione o navio de tamanho ${currentShip}.`
-      : 'Preparando batalha...';
-    refs.shipsText.textContent = `Próximos navios: ${remaining.join(', ') || 'nenhum'}`;
-  }
+function renderMedals(listElement, medals = []) {
+  listElement.innerHTML = '';
 
-  if (state.phase === 'battle') {
-    refs.shipsText.textContent = '';
-  }
+  MEDAL_CATALOG.forEach((medal) => {
+    const li = document.createElement('li');
+    li.textContent = medals.includes(medal) ? `🏅 ${medal}` : `▫️ ${medal}`;
+    listElement.append(li);
+  });
+}
 
-  refs.logText.textContent = state.battleLog;
+export function renderApp(state, refs, handlers) {
+  const isPlayerTurn = state.turn === 'PLAYER';
+  const inProgress = state.status === 'IN_PROGRESS';
+
+  const statusMap = {
+    IN_PROGRESS: 'Em andamento',
+    PLAYER_WIN: 'Vitória do Jogador',
+    AI_WIN: 'Vitória da IA',
+  };
+
+  refs.turnText.textContent = isPlayerTurn ? 'Seu turno' : 'Turno da IA';
+  refs.statusText.textContent = statusMap[state.status] || state.status;
+  refs.scoreText.textContent = String(state.score);
+  refs.loadingText.textContent = state.loading ? 'Aguarde, sincronizando com servidor...' : `Modo ativo: ${modeLabel(state.mode)}`;
+  refs.errorText.textContent = state.error;
+
+  refs.dynamicPanel.classList.toggle('hidden', state.mode !== 'dynamic');
+
+  drawBoard(
+    refs.playerBoard,
+    state.boards.player,
+    'player',
+    handlers.onPlayerBoardCellClick,
+    state.setup.phase === 'placing' && !state.loading,
+  );
+  drawBoard(
+    refs.enemyBoard,
+    state.boards.enemy,
+    'enemy',
+    handlers.onEnemyBoardCellClick,
+    isPlayerTurn && inProgress && !state.loading && state.setup.phase === 'done',
+  );
+
+  refs.moveBtn.disabled = !(state.mode === 'dynamic' && isPlayerTurn && inProgress && !state.loading);
+  refs.newGameBtn.disabled = state.loading;
+  refs.rotateBtn.disabled = !(state.setup.phase === 'placing') || state.loading;
+  refs.nextShipText.textContent = state.setup.shipQueue.length ? `${state.setup.shipQueue[0]} casas (${state.setup.orientation})` : 'Frota posicionada';
+
+  renderMedals(refs.medalsList, state.medals);
+  renderRanking(refs.rankingContainer, state.ranking);
 }

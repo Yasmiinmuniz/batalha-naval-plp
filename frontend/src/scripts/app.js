@@ -1,93 +1,101 @@
-import { createInitialState, placeShip, SHIP_SIZES } from './state.js';
-import { renderBoards, renderStatus } from './boardView.js';
-import { handlePlayerPlacement, playerAttack } from './playerActions.js';
+import { requestDeployFallback } from './api.js';
+import { renderApp } from './boardView.js';
+import { getState, setState, subscribe, placeNextPlayerShip, toggleSetupOrientation } from './state.js';
+import { attackCell, moveShip, refreshRanking, startNewGame } from './playerActions.js';
 
 const refs = {
-  playerBoard: document.querySelector('#playerBoard'),
-  enemyBoard: document.querySelector('#enemyBoard'),
-  statusText: document.querySelector('#statusText'),
-  shipsText: document.querySelector('#shipsText'),
-  logText: document.querySelector('#logText'),
+  playerName: document.querySelector('#playerName'),
+  modeSelect: document.querySelector('#modeSelect'),
+  difficultySelect: document.querySelector('#difficultySelect'),
   rotateBtn: document.querySelector('#rotateBtn'),
   newGameBtn: document.querySelector('#newGameBtn'),
-  difficulty: document.querySelector('#difficulty'),
-  playerName: document.querySelector('#playerName'),
-  playerBoardTitle: document.querySelector('#playerBoardTitle'),
+  refreshRankingBtn: document.querySelector('#refreshRankingBtn'),
+  moveBtn: document.querySelector('#moveBtn'),
+  fromRow: document.querySelector('#fromRow'),
+  fromCol: document.querySelector('#fromCol'),
+  toRow: document.querySelector('#toRow'),
+  toCol: document.querySelector('#toCol'),
+  turnText: document.querySelector('#turnText'),
+  statusText: document.querySelector('#statusText'),
+  scoreText: document.querySelector('#scoreText'),
+  loadingText: document.querySelector('#loadingText'),
+  nextShipText: document.querySelector('#nextShipText'),
+  errorText: document.querySelector('#errorText'),
+  dynamicPanel: document.querySelector('#dynamicPanel'),
+  playerBoard: document.querySelector('#playerBoard'),
+  enemyBoard: document.querySelector('#enemyBoard'),
+  medalsList: document.querySelector('#medalsList'),
+  rankingContainer: document.querySelector('#rankingContainer'),
 };
 
-const state = createInitialState();
-
-function randomPlaceEnemyShips() {
-  SHIP_SIZES.forEach((size) => {
-    let placed = false;
-    while (!placed) {
-      const row = Math.floor(Math.random() * 10);
-      const col = Math.floor(Math.random() * 10);
-      const orientation = Math.random() > 0.5 ? 'horizontal' : 'vertical';
-      placed = placeShip(state.enemyBoard, size, row, col, orientation);
-    }
-  });
-}
-
 function draw() {
-  renderBoards(state, refs, {
-    onPlayerCellClick,
-    onEnemyCellClick,
-    onPlayerHover,
+  renderApp(getState(), refs, {
+    onEnemyBoardCellClick: (row, col) => {
+      attackCell(row, col);
+    },
+    onPlayerBoardCellClick: async (row, col) => {
+      const state = getState();
+      if (state.setup.phase !== 'placing' || state.loading) return;
+
+      const result = placeNextPlayerShip(row, col);
+      if (!result.ok) {
+        setState({ error: 'Posição inválida para este navio.' });
+        return;
+      }
+
+      if (result.remaining === 0) {
+        setState({ error: '', loading: true });
+        try {
+          await requestDeployFallback(state.gameId, getState().boards.player);
+          setState({ setup: { ...getState().setup, phase: 'done' }, error: '' });
+        } catch (err) {
+          setState({ error: err.message || 'Falha ao enviar frota para o backend.' });
+        } finally {
+          setState({ loading: false });
+        }
+      }
+    },
   });
-  renderStatus(state, refs);
 }
 
-function resetGame() {
-  Object.assign(state, createInitialState());
-  state.playerName = refs.playerName.value.trim() || 'Capitão';
-  state.difficulty = refs.difficulty.value;
-  refs.playerBoardTitle.textContent = `Tabuleiro de ${state.playerName}`;
-  refs.rotateBtn.textContent = 'Rotacionar navio (Horizontal)';
-  randomPlaceEnemyShips();
-  draw();
-}
+subscribe(draw);
 
-function onPlayerCellClick(event) {
-  if (state.phase !== 'setup') return;
-  const row = Number(event.currentTarget.dataset.row);
-  const col = Number(event.currentTarget.dataset.col);
-  handlePlayerPlacement(state, row, col, refs);
-  draw();
-}
+refs.newGameBtn.addEventListener('click', () => {
+  const playerName = refs.playerName.value.trim() || 'Capitão';
+  const difficulty = refs.difficultySelect.value;
+  const mode = refs.modeSelect.value;
+  startNewGame({ playerName, difficulty, mode });
+});
 
-function onEnemyCellClick(event) {
-  const row = Number(event.currentTarget.dataset.row);
-  const col = Number(event.currentTarget.dataset.col);
-  playerAttack(state, row, col, refs);
-  draw();
-}
+refs.refreshRankingBtn.addEventListener('click', () => {
+  refreshRanking();
+});
 
-function onPlayerHover(eventOrNull) {
-  if (!eventOrNull) {
-    state.hoverRow = null;
-    state.hoverCol = null;
-  } else {
-    state.hoverRow = Number(eventOrNull.currentTarget.dataset.row);
-    state.hoverCol = Number(eventOrNull.currentTarget.dataset.col);
-  }
-  draw();
-}
+refs.modeSelect.addEventListener('change', () => {
+  setState({ mode: refs.modeSelect.value });
+});
+
+refs.moveBtn.addEventListener('click', () => {
+  moveShip(
+    Number(refs.fromRow.value),
+    Number(refs.fromCol.value),
+    Number(refs.toRow.value),
+    Number(refs.toCol.value),
+  );
+});
 
 refs.rotateBtn.addEventListener('click', () => {
-  state.orientation = state.orientation === 'horizontal' ? 'vertical' : 'horizontal';
-  const mode = state.orientation === 'horizontal' ? 'Horizontal' : 'Vertical';
-  refs.rotateBtn.textContent = `Rotacionar navio (${mode})`;
-  draw();
+  toggleSetupOrientation();
+  const orientation = getState().setup.orientation === 'horizontal' ? 'Horizontal' : 'Vertical';
+  refs.rotateBtn.textContent = `Rotação: ${orientation}`;
 });
 
-refs.newGameBtn.addEventListener('click', resetGame);
-refs.playerName.addEventListener('input', () => {
-  state.playerName = refs.playerName.value.trim() || 'Capitão';
-  refs.playerBoardTitle.textContent = `Tabuleiro de ${state.playerName}`;
-});
-refs.difficulty.addEventListener('change', () => {
-  state.difficulty = refs.difficulty.value;
-});
+refs.difficultySelect.value = getState().difficulty;
+refs.modeSelect.value = getState().mode;
 
-resetGame();
+startNewGame({
+  playerName: 'Capitão',
+  difficulty: getState().difficulty,
+  mode: getState().mode,
+});
+refreshRanking();
