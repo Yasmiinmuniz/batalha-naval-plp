@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batalha Naval</title>
+  <link rel="stylesheet" href="./styles/main.css" />
+</head>
+
+<body>
+  <main class="app">
+    <header class="panel hero">
+      <div>
+        <p class="eyebrow">Projeto Acadêmico • PLP</p>
+        <h1>Batalha Naval</h1>
+        <p class="subtitle">Comande sua frota, leia o campo com estratégia e vença a IA.</p>
+      </div>
+      <div class="legend">
+        <span><i class="dot hit"></i> HIT</span>
+        <span><i class="dot miss"></i> MISS</span>
+        <span><i class="dot sunk"></i> SUNK</span>
+      </div>
+    </header>
+
+    <section class="panel controls">
+      <div>
+        <label for="playerName">Nome do comandante</label>
+        <input id="playerName" type="text" maxlength="24" placeholder="Capitão(a)" />
+      </div>
+      <div>
+        <label for="modeSelect">Modo de partida</label>
+        <select id="modeSelect">
+          <option value="campaign">Campanha</option>
+          <option value="dynamic">Dinâmico</option>
+        </select>
+      </div>
+      <div>
+        <label for="difficultySelect">Nível da IA</label>
+        <select id="difficultySelect">
+          <option value="basic">Básica</option>
+          <option value="intermediate">Intermediária</option>
+          <option value="advanced">Avançada</option>
+        </select>
+      </div>
+      <button id="rotateBtn" type="button">Rotação: Horizontal</button>
+      <button id="newGameBtn" type="button">Nova Partida</button>
+    </section>
+
+    <section class="panel status-grid">
+      <p><strong>Turno</strong><span id="turnText" class="badge">-</span></p>
+      <p><strong>Status</strong><span id="statusText" class="badge">-</span></p>
+      <p><strong>Pontuação</strong><span id="scoreText" class="badge">0</span></p>
+      <p id="loadingText" class="muted"></p>
+      <p><strong>Próximo navio</strong><span id="nextShipText" class="badge">-</span></p>
+      <p id="errorText" class="error"></p>
+    </section>
+
+    <section id="dynamicPanel" class="panel dynamic-panel hidden">
+      <h2>Movimento Tático (Modo Dinâmico)</h2>
+      <p>Antes de atacar, mova <strong>1 navio</strong> para uma célula adjacente.</p>
+      <div class="move-controls">
+        <input id="fromRow" type="number" min="0" max="9" placeholder="origem linha" />
+        <input id="fromCol" type="number" min="0" max="9" placeholder="origem coluna" />
+        <input id="toRow" type="number" min="0" max="9" placeholder="destino linha" />
+        <input id="toCol" type="number" min="0" max="9" placeholder="destino coluna" />
+        <button id="moveBtn" type="button">Mover navio</button>
+      </div>
+    </section>
+
+    <section class="boards">
+      <article class="panel board-panel">
+        <h2>Seu Tabuleiro</h2>
+        <p class="helper">Seus navios visíveis para planejamento defensivo.</p>
+        <div id="playerBoard" class="board"></div>
+      </article>
+      <article class="panel board-panel">
+        <h2>Tabuleiro Inimigo</h2>
+        <p class="helper">Clique apenas quando for o seu turno.</p>
+        <div id="enemyBoard" class="board"></div>
+      </article>
+    </section>
+
+    <section class="panel medals-panel">
+      <h2>Medalhas da Carreira</h2>
+      <ul id="medalsList" class="medals-list"></ul>
+    </section>
+
+    <section class="panel">
+      <div class="ranking-header">
+        <h2>Ranking Geral</h2>
+        <button id="refreshRankingBtn" type="button">Atualizar Ranking</button>
+      </div>
+      <div id="rankingContainer"></div>
+    </section>
+  </main>
+
+  <script type="module" src="./scripts/app.js"></script>
+</body>
+
+</html>

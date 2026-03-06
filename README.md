@@ -4,6 +4,30 @@ Este é um **projeto acadêmico da disciplina PLP**, desenvolvido em **JavaScrip
 
 ---
 
+## Como rodar (frontend integrado ao backend)
+
+Abra **2 terminais** na raiz do projeto.
+
+### Terminal 1 — Backend API
+
+```bash
+npm run start:backend
+```
+
+API em `http://localhost:3000`.
+
+### Terminal 2 — Frontend
+
+```bash
+npm run start:frontend
+```
+
+Frontend em `http://localhost:4173` (agora usando servidor Node, compatível com Windows sem Python).
+
+> O frontend envia ataques e recebe respostas da API do backend (deploy da frota + turno da IA).
+
+---
+
 ## Equipe
 
 * Leticia
