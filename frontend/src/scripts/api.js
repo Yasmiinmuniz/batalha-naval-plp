@@ -26,7 +26,7 @@ async function request(method, path, body) {
 }
 
 export function createGame(payload) {
-  return request('POST', '/game', payload);
+  return request('POST', '/api/game', payload);
 }
 
 export function getGame(gameId) {
@@ -47,7 +47,7 @@ export function move(gameId, fromRow, fromCol, toRow, toCol) {
 }
 
 export function getRanking() {
-  return request('GET', '/ranking');
+  return request('GET', '/api/ranking');
 }
 
 
