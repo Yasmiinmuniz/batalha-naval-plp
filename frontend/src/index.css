@@ -1,0 +1,28 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg-color: #f8f9fa;
+  --text-main: #111111;
+  --board-blue: #6b9cf2;
+  --board-red: #f86e63;
+  --cell-bg: #ffffff;
+  --border-color: #111111;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+
+      background-color: #f8f9fa;
+  /* Uma grade sutil no fundo para manter a vibe "naval/projeto" */
+    background-image: 
+    linear-gradient(#e5e7eb 1px, transparent 1px),
+    linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+    background-size: 24px 24px;
+}

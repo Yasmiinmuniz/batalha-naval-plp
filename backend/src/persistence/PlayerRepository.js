@@ -1,4 +1,4 @@
-class PlayerRepository {
+export default class PlayerRepository {
   constructor(storage) {
     this.storage = storage;
   }
@@ -15,7 +15,7 @@ class PlayerRepository {
     return this.getAll().find(p => p.login === login) || null;
   }
 
-  create(login, nome) {
+  create(login, nome, senha) {
     const players = this.getAll();
 
     if (players.some(p => p.login === login)) {
@@ -26,13 +26,8 @@ class PlayerRepository {
       id: Date.now().toString(),
       login,
       nome,
-      estatisticas: {
-        partidas: 0,
-        vitorias: 0,
-        derrotas: 0,
-        taxaVitoria: 0,
-        taxaDerrota: 0
-      },
+      senha,
+      estatisticas: { partidas: 0, vitorias: 0, derrotas: 0, taxaVitoria: 0, taxaDerrota: 0 },
       medalhas: []
     };
 
@@ -41,14 +36,11 @@ class PlayerRepository {
     return novo;
   }
 
-  update(playerAtualizado) {
-    const players = this.getAll();
-    const index = players.findIndex(p => p.id === playerAtualizado.id);
-    if (index !== -1) {
-      players[index] = playerAtualizado;
-      this.saveAll(players);
+  authenticate(login, senha) {
+    const player = this.findByLogin(login);
+    if (!player || player.senha !== senha) {
+      throw new Error('Login ou senha inválidos');
     }
+    return { id: player.id, login: player.login, nome: player.nome }; 
   }
 }
-
-module.exports = PlayerRepository;

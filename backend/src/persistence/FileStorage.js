@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-class FileStorage {
+export default class FileStorage {
   constructor(filePath) {
     this.filePath = path.resolve(filePath);
 
@@ -33,5 +33,3 @@ class FileStorage {
     }
   }
 }
-
-module.exports = FileStorage;

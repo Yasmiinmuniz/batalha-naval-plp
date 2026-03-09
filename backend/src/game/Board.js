@@ -214,6 +214,7 @@ export default class Board{
                     }
                 }
             }
+            view.push(row);
         }
         return view;
     }

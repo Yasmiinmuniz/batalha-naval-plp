@@ -1,21 +1,34 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Game } from './pages/Game'; // <-- Importe a tela que acabamos de criar
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Home from './pages/Home';
+import Game from './pages/Game';
+import Rules from './pages/Rules';
+import Placement from './pages/Placement';
+import Ranking from './pages/Ranking';
+import EditProfile from './pages/EditProfile';
 
-export const App = () => {
+const PrivateRoute = ({ children }) => {
+  const user = localStorage.getItem('loggedUser');
+  return user ? children : <Navigate to="/login" replace />;
+};
+
+export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Adicionei esse Navigate só pra te jogar direto pro jogo quando abrir o localhost */}
-        <Route path="/" element={<Navigate to="/jogo" />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         
-        <Route path="/cadastro" element={<div>Tela de Cadastro</div>} />
-        <Route path="/menu" element={<div>Menu de Modos de Jogo</div>} />
-        
-        {/* Rota do Jogo renderizando nosso componente novo! */}
-        <Route path="/jogo" element={<Game />} /> 
-        
-        <Route path="/ranking" element={<div>Ranking</div>} />
+        {/*rotas Protegidas*/}
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
+        <Route path="/ranking" element={<PrivateRoute><Ranking /></PrivateRoute>} />
+        <Route path="/rules/:mode" element={<PrivateRoute><Rules /></PrivateRoute>} />
+        <Route path="/placement/:mode" element={<PrivateRoute><Placement /></PrivateRoute>} />
+        <Route path="/game" element={<PrivateRoute><Game /></PrivateRoute>} />
       </Routes>
     </Router>
   );
-};
+}

@@ -1,4 +1,4 @@
-class RewardService {
+export default class RewardService {
   constructor(playerRepo) {
     this.playerRepo = playerRepo;
     this.acertosSeguidos = {};
@@ -12,7 +12,7 @@ class RewardService {
       if (this.acertosSeguidos[playerId] === 7) {
         this._concederPorId(playerId, 'Capitão');
       }
-
+      
       if (this.acertosSeguidos[playerId] === 8) {
         this._concederPorId(playerId, 'Capitão de Mar e Guerra');
       }
@@ -52,5 +52,3 @@ class RewardService {
     }
   }
 }
-
-module.exports = RewardService;

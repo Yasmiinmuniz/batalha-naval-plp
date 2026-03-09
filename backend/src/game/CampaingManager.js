@@ -45,17 +45,25 @@ export default class CampaignManager {
         this.currentAI = currentLevelInfo.createAI(); 
 
         this.activeGame = new GameEngine({
-            gameMode: 'classic',
+            gameMode: this.engineOptions.gameMode || 'classic',
             callbacks: {
                 ...this.engineOptions.callbacks,
                 onGameOver: (payload) => this._handleGameOver(payload)
             }
         });
 
+        // -----------------------------------------------------------
+        // 🛠️ A CORREÇÃO ESTÁ AQUI: 
+        // A Engine cria tabuleiros vazios quando nasce. 
+        // Nós pegamos esses tabuleiros e entregamos para o Humano e para a IA!
+        // -----------------------------------------------------------
+        this.humanPlayer.setBoard(this.activeGame.players[0].board);
+        this.currentAI.setBoard(this.activeGame.players[1].board);
+
         this.activeGame.players[0] = this.humanPlayer;
         this.activeGame.players[1] = this.currentAI;
 
-        //posiciona navio da ia
+        // Agora a IA tem um tabuleiro e pode posicionar os navios sem dar erro
         this._autoPlaceAIShips();
 
         return {

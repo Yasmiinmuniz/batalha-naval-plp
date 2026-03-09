@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1773027912404",
+    "login": "baracholeticia",
+    "nome": "leticia",
+    "senha": "12345678",
+    "estatisticas": {
+      "partidas": 0,
+      "vitorias": 0,
+      "derrotas": 0,
+      "taxaVitoria": 0,
+      "taxaDerrota": 0
+    },
+    "medalhas": []
+  },
+  {
+    "id": "1773028556495",
+    "login": "linda",
+    "nome": "linda",
+    "senha": "09876",
+    "estatisticas": {
+      "partidas": 0,
+      "vitorias": 0,
+      "derrotas": 0,
+      "taxaVitoria": 0,
+      "taxaDerrota": 0
+    },
+    "medalhas": []
+  }
+]

@@ -1,5 +1,6 @@
 import Board from './Board.js';
 import Ship from './Ship.js';
+import Player from './Player.js';
 
 import { randomUUID } from 'crypto';
 
@@ -12,7 +13,7 @@ const GameState = {
 
 export default class GameEngine {
   constructor(options = {}) {
-    this.mode = options.mode || 'PVP'; // 'PVP' ou 'IA']
+    this.mode = options.mode || 'IA'; // 'PVP' ou 'IA']
     this.gameMode = options.gameMode || 'classic'; // 'classic', 'dynamic' ou 'campaign'
     this.callbacks = options.callbacks || {};
 
@@ -167,7 +168,7 @@ export default class GameEngine {
 
   //método para movimentar navios (modo dinamico)
   moveShip(shipId, direction) {
-    if (this.gameMode !== 'dynamic') {
+    if (this.gameMode !== 'dynamic' && this.gameMode !== 'dinamico') {
         return { success: false, reason: 'invalid-mode', detail: "Movimentação só permitida no modo dinâmico" };
     } 
 
