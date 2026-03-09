@@ -1,11 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-class FileStorage {
+export default class FileStorage {
   constructor(filePath) {
     this.filePath = path.resolve(filePath);
 
-    // Garante que o arquivo exista
+    // Garante que o ficheiro exista
     if (!fs.existsSync(this.filePath)) {
       fs.writeFileSync(this.filePath, JSON.stringify([], null, 2));
     }
@@ -33,5 +33,3 @@ class FileStorage {
     }
   }
 }
-
-module.exports = FileStorage;

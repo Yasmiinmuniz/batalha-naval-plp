@@ -1,11 +1,11 @@
-const GameEngine = require('./game/GameEngine');
+import GameEngine from './game/GameEngine.js';
 
-const FileStorage = require('./persistence/FileStorage');
-const PlayerRepository = require('./persistence/PlayerRepository');
+import FileStorage from './persistence/FileStorage.js';
+import PlayerRepository from './persistence/PlayerRepository.js';
 
-const GameService = require('./services/GameService');
-const RankingService = require('./services/RankingService');
-const RewardService = require('./services/RewardService');
+import GameService from './services/GameService.js';
+import RankingService from './services/RankingService.js';
+import RewardService from './services/RewardService.js';
 
 const storage = new FileStorage('data/players.json');
 const playerRepo = new PlayerRepository(storage);
@@ -38,7 +38,7 @@ const engine = new GameEngine({
   }
 });
 
-module.exports = {
+export default {
   engine,
   rankingService,
   playerRepo
