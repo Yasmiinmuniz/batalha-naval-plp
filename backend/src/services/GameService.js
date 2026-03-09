@@ -82,6 +82,23 @@ export default class GameService {
         }
     }
 
+    //para o modo dinâmico
+    moveShip(gameId, shipId, direction) {
+        const game = this.activeGames.get(gameId);
+        if (!game) throw new Error("Partida não encontrada");
+
+        const result = game.moveShip(shipId, direction);
+
+        if (!result.success) {
+            throw new Error(result.detail || "Erro ao mover o navio.");
+        }
+        return {
+            message: "Navio movido com sucesso",
+            moveResult: result,
+            gameState: game.getPublicState()
+        };
+    }
+
   finalizarPartida(loginVencedor, loginPerdedor) {
     const vencedor = this.playerRepo.findByLogin(loginVencedor);
     const perdedor = this.playerRepo.findByLogin(loginPerdedor);
@@ -111,5 +128,3 @@ export default class GameService {
       total > 0 ? player.estatisticas.derrotas / total : 0;
   }
 }
-
-module.exports = GameService;

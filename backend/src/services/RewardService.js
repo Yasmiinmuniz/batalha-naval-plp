@@ -1,4 +1,4 @@
-class RewardService {
+export default class RewardService {
   constructor(playerRepo) {
     this.playerRepo = playerRepo;
     this.acertosSeguidos = {};
@@ -52,5 +52,3 @@ class RewardService {
     }
   }
 }
-
-module.exports = RewardService;

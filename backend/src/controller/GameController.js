@@ -45,4 +45,26 @@ export default class GameController {
             return res.status(400).json({ error: error.message });
         }
     }
+
+    static moveShip(req, res) {
+        try {
+            const { id } = req.params;
+            const { shipId, direction } = req.body; 
+
+            if (!shipId || !direction) {
+                return res.status(400).json({ error: "O ID do navio e a direção são obrigatorios" });
+            }
+
+            const validDirections = ['up', 'down', 'left', 'right'];
+            if (!validDirections.includes(direction)) {
+                return res.status(400).json({ error: "Direção inválida, utilize 'up', 'down', 'left' ou 'right'" });
+            }
+
+            const result = gameService.moveShip(id, shipId, direction);
+
+            return res.status(200).json(result);
+        } catch (error) {
+            return res.status(400).json({ error: error.message });
+        }
+    }
 }

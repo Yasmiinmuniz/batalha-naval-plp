@@ -1,4 +1,4 @@
-class PlayerRepository {
+export default class PlayerRepository {
   constructor(storage) {
     this.storage = storage;
   }
@@ -50,5 +50,3 @@ class PlayerRepository {
     }
   }
 }
-
-module.exports = PlayerRepository;
