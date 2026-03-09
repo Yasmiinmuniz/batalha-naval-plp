@@ -128,5 +128,3 @@ export default class GameService {
       total > 0 ? player.estatisticas.derrotas / total : 0;
   }
 }
-
-module.exports = GameService;

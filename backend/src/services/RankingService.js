@@ -1,4 +1,4 @@
-class RankingService {
+export default class RankingService {
   constructor(playerRepo) {
     this.playerRepo = playerRepo;
   }
@@ -21,5 +21,3 @@ class RankingService {
       }));
   }
 }
-
-module.exports = RankingService;
