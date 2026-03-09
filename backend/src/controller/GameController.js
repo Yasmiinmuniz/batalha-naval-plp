@@ -1,29 +1,27 @@
-import GameService from '../services/GameService.js';
+import { gameService } from '../index.js'; 
 
 export default class GameController {
     
-    // POST /api/game/start
     static startGame(req, res) {
         try {
-            const { mode, gameMode, aiLevel } = req.body;
-            
-            const result = GameService.createGame(mode, gameMode, aiLevel);
+            const { mode, gameMode, aiLevel, loginPlayer1, loginPlayer2 } = req.body;
+
+            const result = gameService.createGame(mode, gameMode, aiLevel, loginPlayer1, loginPlayer2);
             
             return res.status(201).json({
-                message: "Jogo iniciado com sucesso!",
+                message: "jogo iniciado",
                 gameId: result.gameId,
-                state: result.gameState
+                gameState: result.gameState
             });
         } catch (error) {
             return res.status(400).json({ error: error.message });
         }
     }
 
-    // GET /api/game/:id
     static getState(req, res) {
         try {
             const { id } = req.params;
-            const state = GameService.getGameState(id);
+            const state = gameService.getGameState(id);
             
             return res.status(200).json(state);
         } catch (error) {
@@ -31,18 +29,17 @@ export default class GameController {
         }
     }
 
-    // POST /api/game/:id/attack
     static attack(req, res) {
         try {
             const { id } = req.params;
-            const { row, col } = req.body;
+            const { row, col } = req.body; 
 
             if (row === undefined || col === undefined) {
                 return res.status(400).json({ error: "Linha (row) e Coluna (col) são obrigatórios." });
             }
 
-            const result = GameService.processAttack(id, row, col);
-            
+            const result = gameService.processAttack(id, row, col);
+
             return res.status(200).json(result);
         } catch (error) {
             return res.status(400).json({ error: error.message });
