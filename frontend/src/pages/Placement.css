@@ -1,28 +1,90 @@
-.placement-layout { min-height: 100vh; background-color: #f8f9fa; }
-.placement-container { max-width: 1000px; margin: 40px auto; padding: 0 20px 40px; }
+.placement-layout { 
+    min-height: 100vh; 
+    background-color: #f8f9fa; 
+}
 
-.placement-header { text-align: center; margin-bottom: 40px; }
-.placement-header h1 { font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
-.placement-header p { font-size: 16px; color: #666; text-transform: capitalize; }
+.placement-container { 
+    max-width: 1000px; 
+    margin: 40px auto; 
+    padding: 0 20px 40px; 
+}
 
-.placement-content { display: flex; flex-direction: column; gap: 40px; align-items: center; }
+.placement-header { 
+    text-align: center; 
+    margin-bottom: 40px; 
+}
 
-.placement-top { display: flex; gap: 40px; justify-content: center; align-items: flex-start; width: 100%; }
+.placement-header h1 { 
+    font-size: 32px; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    margin-bottom: 8px; 
+}
 
-.controls-card { width: 350px; padding: 24px; }
-.controls-card h2 { font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid #111111; padding-bottom: 8px; }
+.placement-header p {
+     font-size: 16px; 
+     color: #666; 
+     text-transform: capitalize; 
+    }
 
-.button-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
-.action-btn { display: flex; align-items: center; gap: 12px; font-size: 15px; padding: 12px 16px; }
+.placement-content { display: flex; 
+    flex-direction: column; 
+    gap: 40px; 
+    align-items: center; }
+
+.placement-top { 
+    display: flex; 
+    gap: 40px; 
+    justify-content: center; 
+    align-items: flex-start; 
+    width: 100%; }
+
+.controls-card { 
+    width: 350px; 
+    padding: 24px; 
+}
+
+.controls-card h2 { 
+    font-size: 20px; 
+    margin-bottom: 20px; 
+    border-bottom: 2px solid #111111; 
+    padding-bottom: 8px; 
+}
+
+.button-group { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    margin-bottom: 30px; 
+}
+.action-btn { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    font-size: 15px; 
+    padding: 12px 16px; }
+
 .action-btn span { font-size: 20px; }
 
-.start-battle-btn { width: 100%; padding: 20px; font-size: 18px; }
+.start-battle-btn { 
+    width: 100%; 
+    padding: 20px; 
+    font-size: 18px; }
 
 .fleet-panel-section { width: 100%; max-width: 900px; }
-.fleet-panel { padding: 24px; text-align: center; }
-.fleet-panel h3 { font-size: 18px; margin-bottom: 20px; font-weight: 800; }
 
-.fleet-list-horizontal { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.fleet-panel { padding: 24px; text-align: center; }
+
+.fleet-panel h3 { 
+    font-size: 18px; 
+    margin-bottom: 20px; 
+    font-weight: 800; }
+
+.fleet-list-horizontal { 
+    display: flex; 
+    justify-content: center; 
+    gap: 16px; 
+    flex-wrap: wrap; }
 
 .ship-select-item-horiz {
   position: relative;
@@ -40,8 +102,16 @@
   min-width: 120px;
 }
 
-.ship-select-item-horiz:hover { transform: translateY(-4px); box-shadow: 4px 4px 0px #111111; }
-.ship-select-item-horiz.selected { background-color: #ffb703; box-shadow: 6px 6px 0px #111111; transform: translateY(-4px); }
+.ship-select-item-horiz:hover { 
+    transform: translateY(-4px); 
+    box-shadow: 4px 4px 0px #111111; 
+}
+
+.ship-select-item-horiz.selected { 
+    background-color: #ffb703; 
+    box-shadow: 6px 6px 0px #111111; 
+    transform: translateY(-4px); 
+}
 
 .ship-name-label { font-size: 14px; font-weight: 800; }
 

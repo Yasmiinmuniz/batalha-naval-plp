@@ -20,7 +20,7 @@ export default function Register() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
       
-      alert("Conta criada, marujo! Faça login.");
+      alert("Conta criada! Faça login.");
       navigate('/login');
     } catch (error) {
       alert(error.message);

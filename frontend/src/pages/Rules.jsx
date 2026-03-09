@@ -1,18 +1,16 @@
-// src/pages/Rules.jsx
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import './Rules.css';
 
 export default function Rules() {
-  const { mode } = useParams(); // Pega se é 'campanha', 'classico' ou 'dinamico' da URL
+  const { mode } = useParams();
   const navigate = useNavigate();
 
-  // Define o conteúdo baseado no modo
   const rulesContent = {
     campanha: {
       title: "Modo Campanha",
       icon: "🚀",
-      description: "Seu objetivo é vencer três versões de IA disponíveis no jogo.",
+      description: "Vença as três versões de IA disponíveis no jogo.",
       rules: [
         "A primeira batalha será contra a IA Básica (tiros aleatórios).",
         "A segunda será contra a IA Intermediária (busca em torno de acertos).",
@@ -36,13 +34,12 @@ export default function Rules() {
       description: "O mar está agitado! As posições não são fixas.",
       rules: [
         "A regra base é a mesma do modo clássico.",
-        "A grande diferença: cada jogador pode mover um navio para alguma direção antes de realizar a ação de lançar a bomba.",
-        "Use isso para fugir de ataques iminentes ou reposicionar sua frota estrategicamente!"
+        "Cada jogador pode mover um navio para alguma direção antes de lançar a bomba.",
+        "Use isso para fugir de ataques ou reposicionar seus navios estrategicamente!"
       ]
     }
   };
 
-  // Se o modo não existir, cai no clássico por padrão
   const content = rulesContent[mode] || rulesContent.classico;
 
   return (
@@ -66,7 +63,7 @@ export default function Rules() {
           <div className="rules-actions">
             <button className="drawn-btn white-btn" onClick={() => navigate('/home')}>Voltar</button>
             <button className="drawn-btn yellow-btn huge-btn" onClick={() => navigate(`/placement/${mode}`)}>
-              Preparar Frota ➡️
+              Preparar Navios
             </button>
           </div>
         </div>

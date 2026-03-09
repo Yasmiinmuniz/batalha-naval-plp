@@ -1,18 +1,71 @@
-/* src/pages/Rules.css */
-.rules-layout { min-height: 100vh; background-color: #f8f9fa; }
-.rules-container { max-width: 800px; margin: 40px auto; padding: 20px; }
+.rules-layout { min-height: 100vh; 
+    background-color: #f8f9fa; 
+}
+
+.rules-container { 
+    max-width: 800px; 
+    margin: 40px auto; 
+    padding: 20px;
+}
 
 .rules-card { padding: 50px; }
 
-.rules-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 4px solid #111111; padding-bottom: 16px; }
+.rules-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 16px; 
+    margin-bottom: 24px; 
+    border-bottom: 4px solid #111111; 
+    padding-bottom: 16px; 
+}
+
 .rules-icon { font-size: 48px; }
-.rules-header h1 { font-size: 36px; font-weight: 900; color: #111111; text-transform: uppercase; margin: 0; }
 
-.rules-desc { font-size: 18px; font-weight: 700; color: #6b9cf2; margin-bottom: 32px; }
+.rules-header h1 { 
+    font-size: 36px; 
+    font-weight: 900; 
+    color: #111111; 
+    text-transform: uppercase; 
+    margin: 0; 
+}
 
-.rules-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
-.rules-list li { font-size: 16px; font-weight: 600; color: #111111; position: relative; padding-left: 32px; }
-.rules-list li::before { content: '🎯'; position: absolute; left: 0; top: -2px; }
+.rules-desc { 
+    font-size: 18px; 
+    font-weight: 700; 
+    color: #6b9cf2; 
+    margin-bottom: 32px; 
+}
 
-.rules-actions { display: flex; gap: 20px; justify-content: flex-end; }
-.huge-btn { padding: 16px 32px; font-size: 18px; }
+.rules-list { 
+    list-style: none; 
+    padding: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+    margin-bottom: 40px; 
+}
+
+.rules-list li { 
+    font-size: 16px; 
+    font-weight: 600; 
+    color: #111111; 
+    position: relative; 
+    padding-left: 32px; 
+}
+
+.rules-list li::before { 
+    content: '🎯'; 
+    position: absolute; 
+    left: 0; 
+    top: -2px; 
+}
+
+.rules-actions { 
+    display: flex; 
+    gap: 20px; 
+    justify-content: flex-end; 
+}
+.huge-btn { 
+    padding: 16px 32px; 
+    font-size: 18px; 
+}

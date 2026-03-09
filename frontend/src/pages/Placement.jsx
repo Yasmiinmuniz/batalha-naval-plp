@@ -120,13 +120,13 @@ export default function Placement() {
                     className={`drawn-btn action-btn ${isHorizontal ? 'blue-btn' : 'yellow-btn'}`} 
                     onClick={() => setIsHorizontal(!isHorizontal)}
                   >
-                    <span>🔄</span> Rotação: {isHorizontal ? 'Horizontal' : 'Vertical'}
+                    <span></span> Rotação: {isHorizontal ? 'Horizontal' : 'Vertical'}
                   </button>
                   <button className="drawn-btn white-btn action-btn" onClick={handleRandomize}>
-                    <span>🎲</span> Distribuição Aleatória
+                    <span></span> Distribuição Aleatória
                   </button>
                   <button className="drawn-btn red-btn action-btn" onClick={handleClear}>
-                    <span>🧹</span> Limpar Tabuleiro
+                    <span></span> Limpar Tabuleiro
                   </button>
                 </div>
 
@@ -134,7 +134,7 @@ export default function Placement() {
                   className={`drawn-btn start-battle-btn ${placedShips.length === FLEET.length ? 'green-btn' : 'white-btn'}`} 
                   onClick={handleStartBattle}
                 >
-                  ⚓ INICIAR BATALHA
+                  INICIAR BATALHA
                 </button>
               </div>
             </section>

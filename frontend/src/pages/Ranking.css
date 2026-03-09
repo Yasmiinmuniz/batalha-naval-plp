@@ -1,24 +1,80 @@
-/* src/pages/Ranking.css */
-.ranking-layout { min-height: 100vh; background-color: #f8f9fa; }
-.ranking-container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+.ranking-layout { 
+    min-height: 100vh; 
+    background-color: #f8f9fa; 
+}
+
+.ranking-container { 
+    max-width: 900px; 
+    margin: 40px auto; 
+    padding: 0 20px; 
+}
 
 .ranking-card { padding: 40px; }
-.ranking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 4px solid #111111; padding-bottom: 20px; }
-.ranking-header h1 { font-size: 32px; font-weight: 900; margin: 0; text-transform: uppercase; }
+
+.ranking-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 30px; 
+    border-bottom: 4px solid #111111; 
+    padding-bottom: 20px; 
+}
+
+.ranking-header h1 { 
+    font-size: 32px; 
+    font-weight: 900; 
+    margin: 0; 
+    text-transform: uppercase; 
+}
 
 .table-wrapper { overflow-x: auto; }
-.drawn-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
 
-.drawn-table th { text-align: left; padding: 12px 16px; font-weight: 900; text-transform: uppercase; color: #666; border-bottom: 3px solid #111111; }
+.drawn-table {
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0 8px; }
 
-.drawn-table td { padding: 16px; font-weight: 700; background-color: #f8f9fa; border-top: 3px solid #111111; border-bottom: 3px solid #111111; }
-.drawn-table td:first-child { border-left: 3px solid #111111; border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
-.drawn-table td:last-child { border-right: 3px solid #111111; border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+.drawn-table th { 
+    text-align: left; 
+    padding: 12px 16px; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    color: #666; 
+    border-bottom: 3px solid #111111; }
 
-.pos-col { font-size: 18px; color: #f86e63; }
-.name-col { font-size: 18px; color: #111111; }
+.drawn-table td { 
+    padding: 16px; 
+    font-weight: 700; 
+    background-color: #f8f9fa; 
+    border-top: 3px solid #111111; 
+    border-bottom: 3px solid #111111; 
+}
+
+.drawn-table td:first-child { 
+    border-left: 3px solid #111111; 
+    border-top-left-radius: 8px; 
+    border-bottom-left-radius: 8px; 
+}
+
+.drawn-table td:last-child { 
+    border-right: 3px solid #111111; 
+    border-top-right-radius: 8px; 
+    border-bottom-right-radius: 8px; 
+}
+
+.pos-col { 
+    font-size: 18px; 
+    color: #f86e63; 
+}
+.name-col { 
+    font-size: 18px; 
+    color: #111111; 
+}
+
 .rate-col { color: #6b9cf2; }
 
-/* Destaca a linha do jogador logado */
-.highlight-row td { background-color: #ffb703; border-color: #111111; }
+.highlight-row td { 
+    background-color: #ffb703; 
+    border-color: #111111; 
+}
 .highlight-row .name-col, .highlight-row .pos-col, .highlight-row .rate-col { color: #111111; }

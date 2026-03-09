@@ -7,7 +7,6 @@ export default function Ranking() {
   const navigate = useNavigate();
   const [rankingData, setRankingData] = useState([]);
   
-  // Identifica quem está logado para dar aquele destaque amarelo na tabela
   const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
 
   useEffect(() => {
@@ -29,7 +28,7 @@ export default function Ranking() {
       <main className="ranking-container">
         <div className="drawn-card ranking-card">
           <div className="ranking-header">
-            <h1>🏆 Ranking Global</h1>
+            <h1>Ranking Global</h1>
             <button className="drawn-btn white-btn" onClick={() => navigate('/home')}>Voltar ao Lobby</button>
           </div>
 
@@ -54,7 +53,7 @@ export default function Ranking() {
                 ))}
                 {rankingData.length === 0 && (
                   <tr>
-                    <td colSpan="4" style={{textAlign: 'center', padding: '20px'}}>Nenhum comandante no ranking ainda!</td>
+                    <td colSpan="4" style={{textAlign: 'center', padding: '20px'}}>Nenhum jogador no ranking ainda!</td>
                   </tr>
                 )}
               </tbody>
